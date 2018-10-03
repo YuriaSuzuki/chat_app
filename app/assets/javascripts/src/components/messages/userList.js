@@ -13,9 +13,13 @@ class UserList extends React.Component {
   }
 
   get initialState() {
-    const allMessages = MessagesStore.getAllChats()
+    return this.getStateFromStore()
+  }
 
-    const messageList = []
+  getStateFromStore() {
+    const allMessages = MessagesStore.getAllChats()
+    const messageList =[]
+
     _.each(allMessages, (message) => {
       const messagesLength = message.messages.length
       messageList.push({
@@ -28,6 +32,15 @@ class UserList extends React.Component {
       openChatID: MessagesStore.getOpenChatUserID(),
       messageList: messageList,
     }
+  }
+  componentWillMount() {
+    MessagesStore.onChange(this.onStoreChange.bind(this))
+  }
+  componentWillUnmount() {
+    MessagesStore.offChange(this.onStoreChange.bind(this))
+  }
+  onStoreChange() {
+    this.setState(this.getStateFromStore())
   }
   render() {
     this.state.messageList.sort((a, b) => {
