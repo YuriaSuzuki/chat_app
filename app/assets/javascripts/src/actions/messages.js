@@ -6,5 +6,5 @@ export default {
       type: 'updateOpenChatID',
       userID: newUserID,
     })
-  }
+  },
 }
