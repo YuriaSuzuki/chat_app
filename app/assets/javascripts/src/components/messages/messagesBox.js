@@ -14,14 +14,15 @@ class MessagesBox extends React.Component {
   get initialState() {
     return this.getStateFromStore()
   }
-  getStateFromStore() {
+  getStateFromStore() { // messageのすべての情報が返される
     return MessagesStore.getChatByUserID(MessagesStore.getOpenChatUserID())
   }
+  // 何かが変更されたという通知を受け取るたびにStateをアップデートする
   componentWillMount() {
-    MessagesStore.onChange(this.onStoreChange.bind(this))
+    MessagesStore.onChange(this.onStoreChange.bind(this)) // ビューが作成されるときには必ずイベントを追加される
   }
   componentWillUnmount() {
-    MessagesStore.offChange(this.onStoreChange.bind(this))
+    MessagesStore.offChange(this.onStoreChange.bind(this)) // ビューが削除されたらイベントも取り除く
   }
   onStoreChange() {
     this.setState(this.getStateFromStore())
@@ -31,6 +32,7 @@ class MessagesBox extends React.Component {
     const messagesLength = this.state.messages.length
     const currentUserID = UserStore.user.id
 
+    // 全てのmessage.contentsを返す
     const messages = this.state.messages.map((message, index) => {
       const messageClasses = classNames({
         'message-box__item': true,

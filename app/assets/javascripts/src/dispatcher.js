@@ -9,7 +9,7 @@ const appDispatcher = assign(new Dispatcher(), {
     })
   },
 
-  handleViewAction(action) {
+  handleViewAction(action) { // actionから命令を受けて、action名を受け取る
     this.dispatch({
       source: 'view',
       action: action,

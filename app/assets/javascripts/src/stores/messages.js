@@ -69,6 +69,7 @@ const messages = {
   },
 }
 
+// messagesのJSONデータからkeysを取得、初めの人を表示(10)
 var openChatID = parseInt(Object.keys(messages)[0], 10)
 
 class ChatStore extends BaseStore {
@@ -84,7 +85,7 @@ class ChatStore extends BaseStore {
 }
 const MessagesStore = new ChatStore()
 
-MessagesStore.dispatchToken = Dispatcher.register(payload => {
+MessagesStore.dispatchToken = Dispatcher.register(payload => { // dispatchから受け取ったactionの実行
   const action = payload.action
 
   switch (action.type) {
