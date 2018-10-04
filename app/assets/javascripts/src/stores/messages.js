@@ -82,6 +82,12 @@ class ChatStore extends BaseStore {
   getAllChats() {
     return messages
   }
+  getMessage() {
+    if (!this.get('messageJson')) this.setMessage([])
+  }
+  setMessage(array) {
+    this.set('messageJson', array)
+  }
 }
 const MessagesStore = new ChatStore()
 
@@ -104,6 +110,14 @@ MessagesStore.dispatchToken = Dispatcher.register(payload => { // dispatchから
       })
       messages[userID].lastAccess.currentUser = +new Date()
       MessagesStore.emitChange()
+      break
+
+    case ActionTypes.GET_MESSAGES:
+      MessagesStore.setMessage(action.json)
+      MessagesStore.emitChange()
+      break
+
+    case ActionTypes.POST_MESSAGE:
       break
   }
 
