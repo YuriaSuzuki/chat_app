@@ -14,6 +14,7 @@ class UserList extends React.Component {
   }
 
   get initialState() {
+    MessagesAction.getMessages()
     return this.getStateFromStore()
   }
 

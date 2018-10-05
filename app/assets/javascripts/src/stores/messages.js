@@ -84,6 +84,7 @@ class ChatStore extends BaseStore {
   }
   getMessage() {
     if (!this.get('messageJson')) this.setMessage([])
+    return this.get('messageJson')
   }
   setMessage(array) {
     this.set('messageJson', array)
@@ -113,6 +114,8 @@ MessagesStore.dispatchToken = Dispatcher.register(payload => { // dispatchから
       break
 
     case ActionTypes.GET_MESSAGES:
+      console.log('======================')
+      console.log(action.json)
       MessagesStore.setMessage(action.json)
       MessagesStore.emitChange()
       break
