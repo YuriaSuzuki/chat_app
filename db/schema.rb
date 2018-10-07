@@ -24,13 +24,4 @@ ActiveRecord::Schema.define(version: 20181004064922) do
 
   add_index "messages", ["from_user_id"], name: "index_messages_on_from_user_id"
 
-  create_table "users", force: :cascade do |t|
-    t.string   "name"
-    t.string   "status"
-    t.text     "profile_picture"
-    t.datetime "last_access"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-  end
-
 end
