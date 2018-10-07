@@ -1,19 +1,21 @@
-<h2>パスワードをリセット</h2>
+<div class="password_reset_wrapper">
+  <h2 class="password_reset_title">パスワードをリセット</h2>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= devise_error_messages! %>
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+    <%= devise_error_messages! %>
 
-  <div>
-    ご登録いただいたメールアドレスを入力してください。
-    メールアドレス宛にパスワード変更ページのURLが記載されたメールを送信します。
-  </div>
-  <div class="field">
-    <%= f.email_field :email, placeholder: "メールアドレス", autofocus: true %>
-  </div>
+    <div>
+      <p>ご登録いただいたメールアドレスを入力してください。</p>
+      <p>メールアドレス宛にパスワード変更ページのURLが記載されたメールを送信します。</p>
+    </div>
+    <div class="field form-group">
+      <%= f.email_field :email, placeholder: "メールアドレス", autofocus: true, class: "form-controll" %>
+    </div>
 
-  <div class="actions">
-    <%= f.submit "パスワードをリセット" %>
-  </div>
-<% end %>
+    <div class="actions">
+      <%= f.submit "パスワードをリセット", class: "btn btn-info password-reset-btn" %>
+    </div>
+  <% end %>
 
-<%= render "devise/shared/links" %>
+  <%= render "devise/shared/links" %>
+</div>
