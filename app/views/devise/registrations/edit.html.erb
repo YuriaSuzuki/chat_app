@@ -1,0 +1,39 @@
+<%= render "devise/shared/header" %>
+
+<div class="edit_wrapper">
+  <h2 class="edit_user_title">プロフィール編集</h2>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+    <%= devise_error_messages! %>
+    <div class="field form-group edit-form-group">
+      <%= f.text_field :name , autofocus: true, class: "form-controll"%>
+    </div>
+
+    <div class="field form-group edit-form-group">
+      <%= f.email_field :email, class: "form-controll" %>
+    </div>
+
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+    <% end %>
+
+    <div class="field form-group edit-form-group">
+      <%= f.password_field :current_password, placeholder: "現在のパスワード(更新する場合はこの項目を必ず入力してください。)", autocomplete: "off", class: "form-controll" %>
+    </div>
+
+    <div class="field form-group edit-form-group">
+      <%= f.password_field :password, placeholder: "新しいパスワード", autocomplete: "off", class: "form-controll" %>
+    </div>
+
+    <div class="field form-group edit-form-group">
+      <%= f.password_field :password_confirmation, placeholder: "新しいパスワードの確認", autocomplete: "off", class: "form-controll" %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "更新", class: "btn btn-info update_btn" %>
+    </div>
+  <% end %>
+
+
+  <%= button_to "アカウント削除", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-danger user_destroy_btn" %>
+</div>

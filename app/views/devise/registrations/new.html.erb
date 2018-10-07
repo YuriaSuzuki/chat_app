@@ -1,0 +1,36 @@
+<div class="sign_up_wrapper">
+  <div class="form_wrapper">
+    <div class="new_user">
+      <h2 class="new_user_title">Chatを始めよう</h2>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <%= devise_error_messages! %>
+        <div class="field form-group">
+          <%= f.text_field :name, placeholder: "ユーザー名", autofocus: true, class: "form-controll" %>
+        </div>
+
+        <div class="field form-group">
+          <%= f.email_field :email, placeholder: "メールアドレス", class: "form-controll"%>
+        </div>
+
+        <div class="field form-group">
+          <% if @minimum_password_length %>
+          <% end %>
+          <%= f.password_field :password, placeholder: "パスワード", autocomplete: "off", class: "form-controll" %>
+        </div>
+
+        <div class="field form-group">
+          <%= f.password_field :password_confirmation, placeholder: "パスワード確認", autocomplete: "off", class: "form-controll" %>
+        </div>
+
+        <div class="actions form-group">
+          <%= f.submit "新規登録", class: "btn btn-info new-user-btn" %>
+        </div>
+      <% end %>
+
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+  <div class="image_wrapper">
+    <%= image_tag("sign_in_image.png") %>
+  </div>
+</div>
