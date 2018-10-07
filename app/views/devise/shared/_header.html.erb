@@ -11,7 +11,17 @@
         ユーザーを探す
       </li>
       <li class="dropdown">
-        user name
+        <div>
+          <%= current_user.name %>
+        </div>
+        <ul class="dropdown-menu user-menu-box">
+          <li class="user-menu-list">
+            <%= link_to("マイページ", "/users/#{current_user.id}") %>
+          </li>
+          <li class="user-menu-list">
+            <%= link_to("ログアウト" , destroy_user_session_path, method: :delete) %>
+          </li>
+        </ul>
       </li>
     </ul>
   </div>
