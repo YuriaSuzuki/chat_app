@@ -114,8 +114,6 @@ MessagesStore.dispatchToken = Dispatcher.register(payload => { // dispatchから
       break
 
     case ActionTypes.GET_MESSAGES:
-      console.log('======================')
-      console.log(action.json)
       MessagesStore.setMessage(action.json)
       MessagesStore.emitChange()
       break
