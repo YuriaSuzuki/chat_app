@@ -2,7 +2,7 @@
 
 %div.user_profile
   %div.user_profile_image
-    ユーザーイメージ
+    = image_tag(@user.image.url, class: "user_profile_image_id")
   %div.user_profile_name
     = @user.name
   %div.user_profile_email
