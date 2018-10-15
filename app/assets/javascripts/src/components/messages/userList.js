@@ -18,7 +18,7 @@ class UserList extends React.Component {
   }
 
   getStateFromStore() {
-    const allMessages = MessagesStore.getAllChats()
+    const allMessages = MessagesStore.getMessage()
 
     const messageList = []
     _.each(allMessages, (message) => {

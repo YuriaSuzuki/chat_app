@@ -3,7 +3,7 @@ import BaseStore from '../base/store'
 import UserStore from '../stores/user'
 import {ActionTypes} from '../constants/app'
 
-const messages = {
+var messages = {
   2: {
     user: {
       profilePicture: 'https://avatars0.githubusercontent.com/u/7922109?v=3&s=460',
@@ -70,19 +70,17 @@ const messages = {
 }
 
 // messagesのJSONデータからkeysを取得、初めの人を表示(10)
-var openChatID = parseInt(Object.keys(messages)[0], 10)
+var openChatID = 2
 
 class ChatStore extends BaseStore {
   getOpenChatUserID() {
     return openChatID
   }
   getChatByUserID(id) {
-    return messages[id]
+    if (!this.get('messageJson')) this.setMessage([])
+    return this.get('messageJson')[id]
   }
-  getAllChats() {
-    return messages
-  }
-  getMessage() {
+  getMessage() { // getAllChats() と同じになる
     if (!this.get('messageJson')) this.setMessage([])
     return this.get('messageJson')
   }
