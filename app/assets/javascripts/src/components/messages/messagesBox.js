@@ -14,63 +14,67 @@ class MessagesBox extends React.Component {
   get initialState() {
     return this.getStateFromStore()
   }
-  getStateFromStore() { // messageのすべての情報が返される
-    return MessagesStore.getChatByUserID(MessagesStore.getOpenChatUserID())
+  getStateFromStore() {
+    // ToDo：可変に
+    return MessagesStore.getChatByUserID(3)
   }
-  // 何かが変更されたという通知を受け取るたびにStateをアップデートする
   componentWillMount() {
-    MessagesStore.onChange(this.onStoreChange.bind(this)) // ビューが作成されるときには必ずイベントを追加される
+    MessagesStore.onChange(this.onStoreChange.bind(this))
   }
   componentWillUnmount() {
-    MessagesStore.offChange(this.onStoreChange.bind(this)) // ビューが削除されたらイベントも取り除く
+    MessagesStore.offChange(this.onStoreChange.bind(this))
   }
   onStoreChange() {
     this.setState(this.getStateFromStore())
   }
 
   render() {
-    const messagesLength = this.state.messages.length
-    const currentUserID = UserStore.user.id
+    if (this.state == undefined) {
+      return <div/>
+    } else {
+      const messagesLength = this.state.messages.length
+      const currentUserID = UserStore.user.id
 
-    // 全てのmessage.contentsを返す
-    const messages = this.state.messages.map((message, index) => {
-      const messageClasses = classNames({
-        'message-box__item': true,
-        'message-box__item--from-current': message.from === currentUserID,
-        'clear': true,
-      })
+      const messages = this.state.messages.map((message, index) => {
+        const messageClasses = classNames({
+          'message-box__item': true,
+          'message-box__item--from-current': message.from === currentUserID,
+          'clear': true,
+        })
 
-      return (
-          <li key={ message.timestamp + '-' + message.from } className={ messageClasses }>
-            <div className='message-box__item__contents'>
-              { message.contents }
-            </div>
-          </li>
-        )
-    })
-
-    const lastMessage = this.state.messages[messagesLength - 1]
-
-    if (lastMessage.from === currentUserID) {
-      if (this.state.lastAccess.recipient >= lastMessage.timestamp) {
-        const date = Utils.getShortDate(lastMessage.timestamp)
-        messages.push(
-            <li key='read' className='message-box__item message-box__item--read'>
+        return (
+            <li key={ message.timestamp + '-' + message.from } className={ messageClasses }>
               <div className='message-box__item__contents'>
-                Read { date }
+                { message.contents }
               </div>
             </li>
           )
+      })
+
+      const lastMessage = this.state.messages[messagesLength - 1]
+
+      if (lastMessage.from_user_id === currentUserID) {
+        if (this.state.lastAccess.recipient >= lastMessage.timestamp) {
+          const date = Utils.getShortDate(lastMessage.timestamp)
+          messages.push(
+            <li key='read' className='message-box__item message-box__item--read'>
+            <div className='message-box__item__contents'>
+            Read { date }
+            </div>
+            </li>
+          )
+        }
       }
+
+      return (
+          <div className='message-box'>
+            <ul className='message-box__list'>
+              { messages }
+            </ul>
+            <ReplyBox />,
+          </div>
+        )
     }
-    return (
-        <div className='message-box'>
-          <ul className='message-box__list'>
-            { messages }
-          </ul>
-          <ReplyBox />,
-        </div>
-      )
   }
 }
 
