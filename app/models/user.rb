@@ -18,3 +18,4 @@ class User < ActiveRecord::Base
     File.open("public/user_images/#{file_name}", "wb") {|f|f.write(file.read)}
     self.image = file_name
   end
+end
