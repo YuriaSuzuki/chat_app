@@ -1,80 +1,43 @@
 import React from 'react'
-import classNames from 'classNames'
-import MessagesStore from '../../stores/messages'
+import classNames from 'classnames'
 import ReplyBox from '../../components/messages/replyBox'
-import UserStore from '../../stores/user'
-import Utils from '../../utils'
+import _ from 'lodash'
 
 class MessagesBox extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state = this.initialState
-  }
-  get initialState() {
-    return this.getStateFromStore()
-  }
-  getStateFromStore() {
-    // ToDo：可変に
-    return MessagesStore.getChatByUserID(3)
-  }
-  componentWillMount() {
-    MessagesStore.onChange(this.onStoreChange.bind(this))
-  }
-  componentWillUnmount() {
-    MessagesStore.offChange(this.onStoreChange.bind(this))
-  }
-  onStoreChange() {
-    this.setState(this.getStateFromStore())
+  static get propTypes() {
+    return {
+      currentUser: React.PropTypes.object,
+      messages: React.PropTypes.array,
+    }
   }
 
   render() {
-    if (this.state == undefined) {
-      return <div/>
-    } else {
-      const messagesLength = this.state.messages.length
-      const currentUserID = UserStore.user.id
+    const {messages, currentUser} = this.props
 
-      const messages = this.state.messages.map((message, index) => {
-        const messageClasses = classNames({
-          'message-box__item': true,
-          'message-box__item--from-current': message.from === currentUserID,
-          'clear': true,
-        })
-
-        return (
-            <li key={ message.timestamp + '-' + message.from } className={ messageClasses }>
-              <div className='message-box__item__contents'>
-                { message.contents }
-              </div>
-            </li>
-          )
+    const userMessages = _.map(messages, (message) => {
+      const messageClasses = classNames({
+        'message-box__item': true,
+        'message-box__item--from-current': message.user_id === currentUser.id,
+        'clear': true,
       })
-
-      const lastMessage = this.state.messages[messagesLength - 1]
-
-      if (lastMessage.from_user_id === currentUserID) {
-        if (this.state.lastAccess.recipient >= lastMessage.timestamp) {
-          const date = Utils.getShortDate(lastMessage.timestamp)
-          messages.push(
-            <li key='read' className='message-box__item message-box__item--read'>
-            <div className='message-box__item__contents'>
-            Read { date }
-            </div>
-            </li>
-          )
-        }
-      }
-
       return (
-          <div className='message-box'>
-            <ul className='message-box__list'>
-              { messages }
-            </ul>
-            <ReplyBox />,
+        <li key={message.id} className={messageClasses}>
+          <div className='message-box__item__contents'>
+            {message.image ? <img className='image-message' src={`/message_images/${message.image}`} /> : message.body}
           </div>
-        )
-    }
+        </li>
+      )
+    })
+
+    return (
+      <div className='message-box'>
+        <ul className='message-box__list'>
+          {userMessages}
+        </ul>
+        <ReplyBox />
+      </div>
+    )
   }
 }
 
