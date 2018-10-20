@@ -3,16 +3,16 @@ import Dispatcher from '../dispatcher'
 import {ActionTypes, APIEndpoints, CSRFToken} from '../constants/app'
 
 export default {
-  // JSONの成形をどこでやるか？
-  getMessages() {
-    return new Promise(function(resolve, reject) {
+  loadUserMessages(id) {
+    return new Promise((resolve, reject) => {
       request
-      .get('/api/messages')
-      .end(function(error, res) {
+      .get(`${APIEndpoints.USERS}/${id}`)
+      .end((error, res) => {
         if (!error && res.status === 200) {
           const json = JSON.parse(res.text)
           Dispatcher.handleServerAction({
-            type: ActionTypes.GET_MESSAGES,
+            type: ActionTypes.LOAD_USER_MESSAGES,
+            id,
             json,
           })
           resolve(json)
@@ -23,20 +23,16 @@ export default {
     })
   },
 
-  postMeessage(messageId) {
-    return new Promise(function(resolve, reject) {
+  createLastAccess(to_user_id, last_access) {
+    return new Promise((resolve, reject) => {
       request
-      .post(`${APIEndpoints.MESSAGE}`)
+      .post(`${APIEndpoints.USERS}`)
       .set('X-CSRF-Token', CSRFToken())
-      .send({message_id: messageId}) // 送信したい内容
-      .end(function(error, res) {
+      .send({to_user_id, last_access})
+      .end((error, res) => {
         if (!error && res.status === 200) {
           const json = JSON.parse(res.text)
-          Dispatcher.handleServerAction({
-            type: ActionTypes.POST_MESSAGE,
-            messageId,
-            json,
-          })
+          resolve(json)
         } else {
           reject(res)
         }
@@ -44,19 +40,70 @@ export default {
     })
   },
 
-  changeOpenChat(newUserID) {
-    Dispatcher.handleViewAction({ // dispathcerに命令
-      type: ActionTypes.UPDATE_OPEN_CHAT_ID,
-      userID: newUserID,
+  updateLastAccess(to_user_id, last_access) {
+    return new Promise((resolve, reject) => {
+      request
+      .put(`${APIEndpoints.CURRENT_USER}`)
+      .set('X-CSRF-Token', CSRFToken())
+      .send({to_user_id, last_access})
+      .end((error, res) => {
+        if (!error && res.status === 200) {
+          const json = JSON.parse(res.text)
+          resolve(json)
+        } else {
+          reject(res)
+        }
+      })
     })
   },
 
-  sendMessage(userID, message) {
-    Dispatcher.handleViewAction({
-      type: ActionTypes.SEND_MESSAGE,
-      userID: userID,
-      message: message,
-      timestamp: +new Date(),
+  saveMessage(body, to_user_id) {
+    return new Promise((resolve, reject) => {
+      request
+      .post(`${APIEndpoints.MESSAGES}`)
+      .set('X-CSRF-Token', CSRFToken())
+      .send({
+        body,
+        to_user_id,
+      })
+      .end((error, res) => {
+        if (!error && res.status === 200) {
+          const json = JSON.parse(res.text)
+          Dispatcher.handleServerAction({
+            type: ActionTypes.SAVE_MESSAGE,
+            body,
+            to_user_id,
+            json,
+          })
+          resolve(json)
+        } else {
+          reject(res)
+        }
+      })
+    })
+  },
+
+  saveImageChat(file, to_user_id) {
+    return new Promise((resolve, reject) => {
+      request
+      .post(`${APIEndpoints.MESSAGES}/upload_image`)
+      .set('X-CSRF-Token', CSRFToken())
+      .attach('image', file, file.name)
+      .field('to_user_id', to_user_id)
+      .end((error, res) => {
+        if (!error && res.status === 200) {
+          let json = JSON.parse(res.text)
+          Dispatcher.handleServerAction({
+            type: ActionTypes.SAVE_IMAGE_CHAT,
+            image: file.name,
+            to_user_id,
+            json,
+          })
+          resolve(json)
+        } else {
+          reject(res)
+        }
+      })
     })
   },
 }
